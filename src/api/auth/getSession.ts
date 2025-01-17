@@ -23,18 +23,18 @@ export async function getSession(request: GetSessionRequest): Promise<GetSession
 
 function constructUrl(baseUrl: string, apiKey: string, sharedSecret: string, request: GetSessionRequest): URL {
   const { authToken } = request;
-  const method = 'auth.getSession';
-  const signature = createSignature({
-    method,
-    "api_key": apiKey,
-    "token": authToken
-  }, sharedSecret);
+  const params: Record<string, string> = {
+    method: 'auth.getSession',
+    api_key: apiKey,
+    token: authToken
+  };
+  const signature = createSignature(params, sharedSecret);
+  params['api_sig'] = signature;
+  params['format'] = 'json'
   const url = new URL(baseUrl);
-  url.searchParams.set(`method`, method);
-  url.searchParams.set(`format`, `json`);
-  url.searchParams.set(`api_key`, apiKey);
-  url.searchParams.set(`token`, authToken);
-  url.searchParams.set(`api_sig`, signature);
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, value);
+  }
   return url;
 }
 
