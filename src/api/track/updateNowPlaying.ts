@@ -78,4 +78,4 @@ const UpdateNowPlayingResponse = z.object({
   })
 });
 
-type UpdateNowPlayingResponse = z.infer<typeof UpdateNowPlayingResponse>;
+export type UpdateNowPlayingResponse = z.infer<typeof UpdateNowPlayingResponse>;

@@ -87,4 +87,4 @@ const ScrobbleResponse = z.object({
   })
 });
 
-type ScrobbleResponse = z.infer<typeof ScrobbleResponse>;
+export type ScrobbleResponse = z.infer<typeof ScrobbleResponse>;
