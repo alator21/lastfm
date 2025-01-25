@@ -25,9 +25,13 @@ export async function scrobble(request: ScrobbleRequest): Promise<ScrobbleRespon
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(body)
+    body: new URLSearchParams(body)
   });
   if (!response.ok) {
+    console.error(response);
+    const blob = await response.blob();
+    const text = await blob.text()
+    console.error(text);
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   const data = await response.json();
