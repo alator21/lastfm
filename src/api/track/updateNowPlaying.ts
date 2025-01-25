@@ -50,6 +50,9 @@ function constructBody(apiKey: string, sharedSecret: string, request: UpdateNowP
     api_key: apiKey,
     sk: sessionKey
   };
+  if (album !== undefined) {
+    params['album'] = album;
+  }
   const signature = createSignature(params, sharedSecret);
   params['api_sig'] = signature;
   params['format'] = 'json'
