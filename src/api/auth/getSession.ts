@@ -2,13 +2,28 @@ import { z } from "zod";
 import { getApi } from "../api";
 import { createSignature } from "../utils";
 
+/**
+ * Request parameters for getting a session key
+ */
 type GetSessionRequest = {
+  /** Auth token obtained from Last.fm authorization flow */
   authToken: string;
 };
 
 /**
- * Fetch a session key for a user.
- * https://www.last.fm/api/show/auth.getSession
+ * Fetch a session key for a user after they've authorized your application.
+ * @param request - Request parameters
+ * @param request.authToken - Auth token obtained from Last.fm authorization flow
+ * @returns Promise resolving to session information
+ * @throws {Error} If HTTP request fails
+ * @see https://www.last.fm/api/show/auth.getSession
+ * @example
+ * ```typescript
+ * const sessionResponse = await getSession({ 
+ *   authToken: 'AUTH_TOKEN_FROM_USER' 
+ * });
+ * const sessionKey = sessionResponse.session.key;
+ * ```
  */
 export async function getSession(request: GetSessionRequest): Promise<GetSessionResponse> {
   const api = getApi();
@@ -45,4 +60,7 @@ const GetSessionResponse = z.object({
     subscriber: z.number()
   })
 });
+/**
+ * Response from the getSession API call
+ */
 export type GetSessionResponse = z.infer<typeof GetSessionResponse>;

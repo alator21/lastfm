@@ -1,7 +1,14 @@
 let LAST_FM_API: LastFmApi | undefined;
 
 /**
- * Initialize the last fm integration with your API key and shared secret.
+ * Initialize the Last.fm API with your credentials. Must be called before using any other methods.
+ * @param apiKey - Your Last.fm API key
+ * @param sharedSecret - Your Last.fm shared secret
+ * @throws {Error} If API is already initialized
+ * @example
+ * ```typescript
+ * initializeLastFmApi('your-api-key', 'your-shared-secret');
+ * ```
  */
 export function initializeLastFmApi(apiKey: string, sharedSecret: string) {
   if (isApiInitialized(LAST_FM_API)) {
@@ -15,6 +22,12 @@ function isApiInitialized(api: LastFmApi | undefined): api is LastFmApi {
   return api !== undefined
 }
 
+/**
+ * Get the initialized Last.fm API instance.
+ * @returns The initialized LastFmApi instance
+ * @throws {Error} If API hasn't been initialized yet
+ * @internal This is an internal function used by other API methods
+ */
 export function getApi() {
   if (!isApiInitialized(LAST_FM_API)) {
     throw new Error('You need to initialize the API.');

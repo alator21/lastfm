@@ -3,17 +3,41 @@ import { getApi } from "../api";
 import { createSignature } from "../utils";
 
 
+/**
+ * Request parameters for updating now playing status
+ */
 type UpdateNowPlayingRequest = {
+  /** The artist name */
   artist: string;
+  /** The track name */
   track: string;
+  /** Album name (optional) */
   album?: string;
+  /** User's session key */
   sessionKey: string;
 };
 
 
 /**
- * Used to notify Last.fm that a user has started listening to a track
- * https://www.last.fm/api/show/track.updateNowPlaying
+ * Notify Last.fm that a user has started listening to a track.
+ * @param request - Request parameters
+ * @param request.artist - The artist name
+ * @param request.track - The track name
+ * @param request.sessionKey - User's session key
+ * @param request.album - Album name (optional)
+ * @returns Promise resolving to now playing status
+ * @throws {Error} If HTTP request fails
+ * @see https://www.last.fm/api/show/track.updateNowPlaying
+ * @example
+ * ```typescript
+ * const response = await updateNowPlaying({
+ *   artist: 'The Beatles',
+ *   track: 'Hey Jude',
+ *   album: 'Hey Jude',
+ *   sessionKey: 'USER_SESSION_KEY'
+ * });
+ * console.log(`Now playing: ${response.nowplaying.track['#text']}`);
+ * ```
  */
 export async function updateNowPlaying(request: UpdateNowPlayingRequest): Promise<UpdateNowPlayingResponse> {
   const api = getApi();
@@ -85,4 +109,7 @@ const UpdateNowPlayingResponse = z.object({
   })
 });
 
+/**
+ * Response from the updateNowPlaying API call containing now playing status
+ */
 export type UpdateNowPlayingResponse = z.infer<typeof UpdateNowPlayingResponse>;

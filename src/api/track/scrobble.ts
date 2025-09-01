@@ -3,18 +3,45 @@ import { getApi } from "../api";
 import { createSignature } from "../utils";
 
 
+/**
+ * Request parameters for scrobbling a track
+ */
 type ScrobbleRequest = {
+  /** The artist name */
   artist: string;
+  /** The track name */
   track: string;
+  /** When the track was played */
   timestamp: Date;
+  /** Album name (optional) */
   album?: string;
+  /** User's session key */
   sessionKey: string;
 };
 
 
 /**
- * Used to add a track-play to a user's profile
- * https://www.last.fm/api/show/track.scrobble
+ * Add a track play to a user's profile (scrobbles the track).
+ * @param request - Request parameters
+ * @param request.artist - The artist name
+ * @param request.track - The track name
+ * @param request.timestamp - When the track was played (Date object)
+ * @param request.sessionKey - User's session key
+ * @param request.album - Album name (optional)
+ * @returns Promise resolving to scrobble result with acceptance status
+ * @throws {Error} If HTTP request fails
+ * @see https://www.last.fm/api/show/track.scrobble
+ * @example
+ * ```typescript
+ * const response = await scrobble({
+ *   artist: 'Radiohead',
+ *   track: 'Creep',
+ *   album: 'Pablo Honey',
+ *   timestamp: new Date(),
+ *   sessionKey: 'USER_SESSION_KEY'
+ * });
+ * console.log(`Accepted: ${response.scrobbles['@attr'].accepted}`);
+ * ```
  */
 export async function scrobble(request: ScrobbleRequest): Promise<ScrobbleResponse> {
   const api = getApi();
@@ -23,7 +50,7 @@ export async function scrobble(request: ScrobbleRequest): Promise<ScrobbleRespon
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
     body: new URLSearchParams(body)
   });
@@ -58,7 +85,6 @@ function constructBody(apiKey: string, sharedSecret: string, request: ScrobbleRe
   const signature = createSignature(params, sharedSecret);
   params['api_sig'] = signature;
   params['format'] = 'json'
-  if (album !== undefined) { params['album'] = album; }
   return params;
 }
 
@@ -94,4 +120,7 @@ const ScrobbleResponse = z.object({
   })
 });
 
+/**
+ * Response from the scrobble API call containing scrobble results and metadata
+ */
 export type ScrobbleResponse = z.infer<typeof ScrobbleResponse>;

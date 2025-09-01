@@ -1,16 +1,41 @@
 import { z } from "zod";
 import { getApi } from "../api";
 
+/**
+ * Request parameters for getting a user's top tracks
+ */
 type GetTopTracksRequest = {
+  /** Last.fm username */
   user: string;
+  /** Time period (default: 'overall') */
   period?: 'overall' | '7day' | '1month' | '3month' | '6month' | '12month';
+  /** Number of results per page (default: 50, max: 1000) */
   limit?: number;
+  /** Page number for pagination (default: 1) */
   page?: number;
 };
 
 /**
- * Get top tracks of user.
- * https://www.last.fm/api/show/user.getTopTracks
+ * Get the top tracks for a user over a specified time period.
+ * @param request - Request parameters
+ * @param request.user - Last.fm username
+ * @param request.period - Time period: 'overall' | '7day' | '1month' | '3month' | '6month' | '12month' (default: 'overall')
+ * @param request.limit - Number of results per page (default: 50, max: 1000)
+ * @param request.page - Page number for pagination (default: 1)
+ * @returns Promise resolving to top tracks with metadata
+ * @throws {Error} If HTTP request fails
+ * @see https://www.last.fm/api/show/user.getTopTracks
+ * @example
+ * ```typescript
+ * const response = await getTopTracks({
+ *   user: 'username',
+ *   period: '1month',
+ *   limit: 10
+ * });
+ * response.toptracks.track.forEach((track, index) => {
+ *   console.log(`${index + 1}. ${track.name} by ${track.artist.name} (${track.playcount} plays)`);
+ * });
+ * ```
  */
 export async function getTopTracks(request: GetTopTracksRequest): Promise<GetTopTracksResponse> {
   const api = getApi();
@@ -79,4 +104,7 @@ const GetTopTracksResponse = z.object({
     }),
   }),
 });
+/**
+ * Response from the getTopTracks API call containing user's top tracks with metadata
+ */
 export type GetTopTracksResponse = z.infer<typeof GetTopTracksResponse>;
