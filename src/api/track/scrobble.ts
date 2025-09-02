@@ -88,6 +88,9 @@ function constructBody(apiKey: string, sharedSecret: string, request: ScrobbleRe
   return params;
 }
 
+/**
+ * Zod schema for validating API responses
+ */
 const ScrobbleResponse = z.object({
   scrobbles: z.object({
     '@attr': z.object({

@@ -84,6 +84,10 @@ function constructBody(apiKey: string, sharedSecret: string, request: UpdateNowP
   return params;
 }
 
+
+/**
+ * Zod schema for validating API responses
+ */
 const UpdateNowPlayingResponse = z.object({
   nowplaying: z.object({
     artist: z.object({

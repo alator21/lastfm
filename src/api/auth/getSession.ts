@@ -53,6 +53,10 @@ function constructUrl(baseUrl: string, apiKey: string, sharedSecret: string, req
   return url;
 }
 
+
+/**
+ * Zod schema for validating API responses
+ */
 const GetSessionResponse = z.object({
   session: z.object({
     name: z.string(),

@@ -92,6 +92,9 @@ const TrackSchema = z.object({
   }),
 });
 
+/**
+ * Zod schema for validating API responses
+ */
 const GetTopTracksResponse = z.object({
   toptracks: z.object({
     track: z.array(TrackSchema),

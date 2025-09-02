@@ -71,6 +71,9 @@ const ArtistSchema = z.object({
 });
 
 
+/**
+ * Zod schema for validating API responses
+ */
 const GetTopArtistsResponse = z.object({
   topartists: z.object({
     artist: z.array(ArtistSchema),
